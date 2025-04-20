@@ -1,7 +1,7 @@
 {
   "name": "commit-parser",
   "version": "0.0.0",
-  "description": "A tiny commits parser",
+  "description": "A tiny parser for conventional commits that extracts metadata like type, scope, breaking changes and references",
   "type": "module",
   "author": {
     "name": "Lucas Nørgård",

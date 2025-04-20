@@ -3,7 +3,7 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 
-A tiny conventional commit parser that can parse git commits and extract useful information like type, scope, breaking changes, references, and co-authors.
+A tiny parser for conventional commits that extracts metadata like type, scope, breaking changes and references.
 
 ## Installation
 
