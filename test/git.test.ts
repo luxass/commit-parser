@@ -19,34 +19,36 @@ describe("getRawGitCommitStrings", () => {
   });
 
   it("should fetch commits with only the \"to\" parameter", () => {
-    const sampleOutput
-      = "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|This is commit body[GIT_COMMIT_END]\n"
-        + "def456|Fix bug|Jane Smith|jane@example.com|Tue Apr 14 2025|Another commit message[GIT_COMMIT_END]\n";
+    const sampleOutput = "----\n"
+      + "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|This is commit body\n"
+      + "----\n"
+      + "def456|Fix bug|Jane Smith|jane@example.com|Tue Apr 14 2025|Another commit message";
 
     mockExecSync.mockReturnValue(sampleOutput);
 
     const result = getRawGitCommitStrings(undefined, "main");
 
     expect(mockExecSync).toHaveBeenCalledWith(
-      "git --no-pager log \"main\" --pretty=\"%h|%s|%an|%ae|%ad|%b[GIT_COMMIT_END]\"",
+      "git --no-pager log \"main\" --pretty=\"----%n%h|%s|%an|%ae|%ad|%b\"",
       { encoding: "utf8", cwd: undefined },
     );
 
     expect(result).toEqual([
-      "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|This is commit body",
+      "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|This is commit body\n",
       "def456|Fix bug|Jane Smith|jane@example.com|Tue Apr 14 2025|Another commit message",
     ]);
   });
 
   it("should fetch commits between \"from\" and \"to\" parameters", () => {
-    const sampleOutput = "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Commit message[GIT_COMMIT_END]\n";
+    const sampleOutput = "----\n"
+      + "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Commit message";
 
     mockExecSync.mockReturnValue(sampleOutput);
 
     const result = getRawGitCommitStrings("v1.0.0", "v2.0.0");
 
     expect(mockExecSync).toHaveBeenCalledWith(
-      "git --no-pager log \"v1.0.0...v2.0.0\" --pretty=\"%h|%s|%an|%ae|%ad|%b[GIT_COMMIT_END]\"",
+      "git --no-pager log \"v1.0.0...v2.0.0\" --pretty=\"----%n%h|%s|%an|%ae|%ad|%b\"",
       { encoding: "utf8", cwd: undefined },
     );
 
@@ -56,14 +58,15 @@ describe("getRawGitCommitStrings", () => {
   });
 
   it("should use HEAD as default \"to\" parameter", () => {
-    const sampleOutput = "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Commit message[GIT_COMMIT_END]\n";
+    const sampleOutput = "----\n"
+      + "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Commit message";
 
     mockExecSync.mockReturnValue(sampleOutput);
 
     const result = getRawGitCommitStrings("v1.0.0");
 
     expect(mockExecSync).toHaveBeenCalledWith(
-      "git --no-pager log \"v1.0.0...HEAD\" --pretty=\"%h|%s|%an|%ae|%ad|%b[GIT_COMMIT_END]\"",
+      "git --no-pager log \"v1.0.0...HEAD\" --pretty=\"----%n%h|%s|%an|%ae|%ad|%b\"",
       { encoding: "utf8", cwd: undefined },
     );
 
@@ -73,14 +76,15 @@ describe("getRawGitCommitStrings", () => {
   });
 
   it("should use the provided cwd parameter", () => {
-    const sampleOutput = "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Commit message[GIT_COMMIT_END]\n";
+    const sampleOutput = "----\n"
+      + "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Commit message";
 
     mockExecSync.mockReturnValue(sampleOutput);
 
     const result = getRawGitCommitStrings("v1.0.0", "HEAD", "/path/to/repo");
 
     expect(mockExecSync).toHaveBeenCalledWith(
-      "git --no-pager log \"v1.0.0...HEAD\" --pretty=\"%h|%s|%an|%ae|%ad|%b[GIT_COMMIT_END]\"",
+      "git --no-pager log \"v1.0.0...HEAD\" --pretty=\"----%n%h|%s|%an|%ae|%ad|%b\"",
       { encoding: "utf8", cwd: "/path/to/repo" },
     );
 
@@ -90,8 +94,8 @@ describe("getRawGitCommitStrings", () => {
   });
 
   it("should handle commits with multiline body", () => {
-    const sampleOutput
-      = "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|This is commit body\nwith multiple lines\nand more text[GIT_COMMIT_END]\n";
+    const sampleOutput = "----\n"
+      + "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|This is commit body\nwith multiple lines\nand more text";
 
     mockExecSync.mockReturnValue(sampleOutput);
 
@@ -103,8 +107,8 @@ describe("getRawGitCommitStrings", () => {
   });
 
   it("should handle commits with pipe characters in body", () => {
-    const sampleOutput
-      = "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|This commit contains | pipe characters[GIT_COMMIT_END]\n";
+    const sampleOutput = "----\n"
+      + "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|This commit contains | pipe characters";
 
     mockExecSync.mockReturnValue(sampleOutput);
 
@@ -123,19 +127,22 @@ describe("getRawGitCommitStrings", () => {
     expect(result).toEqual([]);
   });
 
-  it("should filter out empty entries", () => {
-    const sampleOutput
-      = "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Body 1[GIT_COMMIT_END]\n"
-        + "[GIT_COMMIT_END]\n" // Empty entry that should be filtered
-        + "def456|Fix bug|Jane Smith|jane@example.com|Tue Apr 14 2025|Body 2[GIT_COMMIT_END]\n";
+  it("should handle multiple consecutive commits", () => {
+    const sampleOutput = "----\n"
+      + "abc123|First commit|John Doe|john@example.com|Wed Apr 15 2025|First message\n"
+      + "----\n"
+      + "def456|Second commit|Jane Smith|jane@example.com|Tue Apr 14 2025|Second message\n"
+      + "----\n"
+      + "ghi789|Third commit|Bob Brown|bob@example.com|Mon Apr 13 2025|Third message";
 
     mockExecSync.mockReturnValue(sampleOutput);
 
     const result = getRawGitCommitStrings(undefined, "HEAD");
 
     expect(result).toEqual([
-      "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Body 1",
-      "def456|Fix bug|Jane Smith|jane@example.com|Tue Apr 14 2025|Body 2",
+      "abc123|First commit|John Doe|john@example.com|Wed Apr 15 2025|First message\n",
+      "def456|Second commit|Jane Smith|jane@example.com|Tue Apr 14 2025|Second message\n",
+      "ghi789|Third commit|Bob Brown|bob@example.com|Mon Apr 13 2025|Third message",
     ]);
   });
 });
