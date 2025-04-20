@@ -1,13 +1,13 @@
 import type { Mock } from "vitest";
 import { execSync } from "node:child_process";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getRawGitCommits } from "../src/git";
+import { getRawGitCommitStrings } from "../src/git";
 
 vi.mock("node:child_process", () => ({
   execSync: vi.fn(),
 }));
 
-describe("getRawGitCommits", () => {
+describe("getRawGitCommitStrings", () => {
   const mockExecSync = execSync as unknown as Mock;
 
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe("getRawGitCommits", () => {
 
     mockExecSync.mockReturnValue(sampleOutput);
 
-    const result = getRawGitCommits(undefined, "main");
+    const result = getRawGitCommitStrings(undefined, "main");
 
     expect(mockExecSync).toHaveBeenCalledWith(
       "git --no-pager log \"main\" --pretty=\"%h|%s|%an|%ae|%ad|%b[GIT_COMMIT_END]\"",
@@ -43,7 +43,7 @@ describe("getRawGitCommits", () => {
 
     mockExecSync.mockReturnValue(sampleOutput);
 
-    const result = getRawGitCommits("v1.0.0", "v2.0.0");
+    const result = getRawGitCommitStrings("v1.0.0", "v2.0.0");
 
     expect(mockExecSync).toHaveBeenCalledWith(
       "git --no-pager log \"v1.0.0...v2.0.0\" --pretty=\"%h|%s|%an|%ae|%ad|%b[GIT_COMMIT_END]\"",
@@ -60,7 +60,7 @@ describe("getRawGitCommits", () => {
 
     mockExecSync.mockReturnValue(sampleOutput);
 
-    const result = getRawGitCommits("v1.0.0");
+    const result = getRawGitCommitStrings("v1.0.0");
 
     expect(mockExecSync).toHaveBeenCalledWith(
       "git --no-pager log \"v1.0.0...HEAD\" --pretty=\"%h|%s|%an|%ae|%ad|%b[GIT_COMMIT_END]\"",
@@ -77,7 +77,7 @@ describe("getRawGitCommits", () => {
 
     mockExecSync.mockReturnValue(sampleOutput);
 
-    const result = getRawGitCommits("v1.0.0", "HEAD", "/path/to/repo");
+    const result = getRawGitCommitStrings("v1.0.0", "HEAD", "/path/to/repo");
 
     expect(mockExecSync).toHaveBeenCalledWith(
       "git --no-pager log \"v1.0.0...HEAD\" --pretty=\"%h|%s|%an|%ae|%ad|%b[GIT_COMMIT_END]\"",
@@ -95,7 +95,7 @@ describe("getRawGitCommits", () => {
 
     mockExecSync.mockReturnValue(sampleOutput);
 
-    const result = getRawGitCommits(undefined, "HEAD");
+    const result = getRawGitCommitStrings(undefined, "HEAD");
 
     expect(result).toEqual([
       "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|This is commit body\nwith multiple lines\nand more text",
@@ -108,7 +108,7 @@ describe("getRawGitCommits", () => {
 
     mockExecSync.mockReturnValue(sampleOutput);
 
-    const result = getRawGitCommits(undefined, "HEAD");
+    const result = getRawGitCommitStrings(undefined, "HEAD");
 
     expect(result).toEqual([
       "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|This commit contains | pipe characters",
@@ -118,7 +118,7 @@ describe("getRawGitCommits", () => {
   it("should handle empty result", () => {
     mockExecSync.mockReturnValue("");
 
-    const result = getRawGitCommits("v1.0.0", "v2.0.0");
+    const result = getRawGitCommitStrings("v1.0.0", "v2.0.0");
 
     expect(result).toEqual([]);
   });
@@ -131,7 +131,7 @@ describe("getRawGitCommits", () => {
 
     mockExecSync.mockReturnValue(sampleOutput);
 
-    const result = getRawGitCommits(undefined, "HEAD");
+    const result = getRawGitCommitStrings(undefined, "HEAD");
 
     expect(result).toEqual([
       "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Body 1",
