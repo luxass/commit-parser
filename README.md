@@ -74,6 +74,10 @@ const parsedCoAuthored = parseCommit(coAuthoredCommit);
 
 Published under [MIT License](./LICENSE).
 
+## Acknowledgements
+
+This project is using code from [unjs/changelogen](https://github.com/unjs/changelogen), which is licensed under the [MIT License](
+
 <!-- Badges -->
 
 [npm-version-src]: https://img.shields.io/npm/v/commit-parser?style=flat&colorA=18181B&colorB=4169E1
