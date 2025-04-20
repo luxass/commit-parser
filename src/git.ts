@@ -1,7 +1,12 @@
 import { execSync } from "node:child_process";
 
-function execCommand(cmd: string, cwd?: string) {
-  return execSync(cmd, { encoding: "utf8", cwd }).trim();
+/** @internal */
+function execCommand(cmd: string, cwd?: string): string {
+  try {
+    return execSync(cmd, { encoding: "utf8", cwd }).trim();
+  } catch {
+    return "";
+  }
 }
 
 /**
