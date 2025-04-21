@@ -30,7 +30,7 @@ describe("getRawGitCommitStrings", () => {
 
     expect(mockExecSync).toHaveBeenCalledWith(
       "git --no-pager log \"main\" --pretty=\"----%n%h|%s|%an|%ae|%ad|%b\"",
-      { encoding: "utf8", cwd: undefined },
+      { encoding: "utf8", cwd: undefined, stdio: ["pipe", "pipe", "pipe"] },
     );
 
     expect(result).toEqual([
@@ -49,7 +49,7 @@ describe("getRawGitCommitStrings", () => {
 
     expect(mockExecSync).toHaveBeenCalledWith(
       "git --no-pager log \"v1.0.0...v2.0.0\" --pretty=\"----%n%h|%s|%an|%ae|%ad|%b\"",
-      { encoding: "utf8", cwd: undefined },
+      { encoding: "utf8", cwd: undefined, stdio: ["pipe", "pipe", "pipe"] },
     );
 
     expect(result).toEqual([
@@ -67,7 +67,11 @@ describe("getRawGitCommitStrings", () => {
 
     expect(mockExecSync).toHaveBeenCalledWith(
       "git --no-pager log \"v1.0.0...HEAD\" --pretty=\"----%n%h|%s|%an|%ae|%ad|%b\"",
-      { encoding: "utf8", cwd: undefined },
+      {
+        encoding: "utf8",
+        cwd: undefined,
+        stdio: ["pipe", "pipe", "pipe"],
+      },
     );
 
     expect(result).toEqual([
@@ -85,7 +89,7 @@ describe("getRawGitCommitStrings", () => {
 
     expect(mockExecSync).toHaveBeenCalledWith(
       "git --no-pager log \"v1.0.0...HEAD\" --pretty=\"----%n%h|%s|%an|%ae|%ad|%b\"",
-      { encoding: "utf8", cwd: "/path/to/repo" },
+      { encoding: "utf8", cwd: "/path/to/repo", stdio: ["pipe", "pipe", "pipe"] },
     );
 
     expect(result).toEqual([

@@ -3,7 +3,11 @@ import { execSync } from "node:child_process";
 /** @internal */
 function execCommand(cmd: string, cwd?: string): string {
   try {
-    return execSync(cmd, { encoding: "utf8", cwd }).trim();
+    return execSync(cmd, {
+      encoding: "utf8",
+      cwd,
+      stdio: ["pipe", "pipe", "pipe"],
+    }).trim();
   } catch {
     return "";
   }
