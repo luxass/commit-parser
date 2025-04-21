@@ -158,4 +158,26 @@ describe("getRawGitCommitStrings", () => {
       "ghi789|Third commit|Bob Brown|bob@example.com|Mon Apr 13 2025|Third message",
     ]);
   });
+
+  it("should use the provided folder parameter", () => {
+    const sampleOutput = "----\n"
+      + "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Commit message";
+
+    mockExecSync.mockReturnValue(sampleOutput);
+
+    const result = getRawGitCommitStrings({
+      from: "v1.0.0",
+      to: "HEAD",
+      folder: "src",
+    });
+
+    expect(mockExecSync).toHaveBeenCalledWith(
+      "git --no-pager log \"v1.0.0...HEAD\" --pretty=\"----%n%h|%s|%an|%ae|%ad|%b\" -- src",
+      { encoding: "utf8", cwd: undefined, stdio: ["pipe", "pipe", "pipe"] },
+    );
+
+    expect(result).toEqual([
+      "abc123|Add feature|John Doe|john@example.com|Wed Apr 15 2025|Commit message",
+    ]);
+  });
 });
