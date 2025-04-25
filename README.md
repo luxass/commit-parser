@@ -76,7 +76,7 @@ Published under [MIT License](./LICENSE).
 
 ## Acknowledgements
 
-This project is using code from [unjs/changelogen](https://github.com/unjs/changelogen), which is licensed under the [MIT License](
+This project is using code from [unjs/changelogen](https://github.com/unjs/changelogen), which is licensed under the [MIT License](https://github.com/unjs/changelogen/blob/main/LICENSE)
 
 <!-- Badges -->
 
