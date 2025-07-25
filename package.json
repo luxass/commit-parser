@@ -1,6 +1,6 @@
 {
   "name": "commit-parser",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A tiny parser for conventional commits that extracts metadata like type, scope, breaking changes and references",
   "type": "module",
   "author": {
@@ -8,7 +8,7 @@
     "email": "lucasnrgaard@gmail.com",
     "url": "https://luxass.dev"
   },
-  "packageManager": "pnpm@10.8.1",
+  "packageManager": "pnpm@10.13.1",
   "license": "MIT",
   "homepage": "https://github.com/luxass/commit-parser",
   "repository": {
@@ -43,12 +43,12 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@luxass/eslint-config": "^4.18.1",
+    "@luxass/eslint-config": "^5.1.1",
     "@types/node": "^22.10.9",
-    "eslint": "^9.25.0",
+    "eslint": "^9.32.0",
     "publint": "^0.3.12",
-    "tsdown": "^0.9.1",
+    "tsdown": "^0.13.0",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.1"
+    "vitest": "^3.2.4"
   }
 }
