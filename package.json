@@ -1,6 +1,6 @@
 {
   "name": "commit-parser",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A tiny parser for conventional commits that extracts metadata like type, scope, breaking changes and references",
   "type": "module",
   "author": {
