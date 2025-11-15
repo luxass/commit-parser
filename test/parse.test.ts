@@ -3,11 +3,12 @@ import { parseCommit, parseRawCommit } from "../src/parse";
 
 describe("parseRawCommit", () => {
   it("should parse a basic commit correctly", () => {
-    const rawCommit = "abc123|feat: add new feature|John Doe|john@example.com|1609459200";
+    const rawCommit = "abc123|abc1234567890abcdef1234567890abcdef1234|feat: add new feature|John Doe|john@example.com|1609459200";
     const result = parseRawCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "abc123",
+      hash: "abc1234567890abcdef1234567890abcdef1234",
       message: "feat: add new feature",
       author: {
         name: "John Doe",
@@ -19,11 +20,12 @@ describe("parseRawCommit", () => {
   });
 
   it("should handle commit with body", () => {
-    const rawCommit = "def456|fix: bug fix|Jane Smith|jane@example.com|1609545600|This is the first line|This is the second line";
+    const rawCommit = "def456|def4567890abcdef1234567890abcdef12345678|fix: bug fix|Jane Smith|jane@example.com|1609545600|This is the first line|This is the second line";
     const result = parseRawCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "def456",
+      hash: "def4567890abcdef1234567890abcdef12345678",
       message: "fix: bug fix",
       author: {
         name: "Jane Smith",
@@ -35,11 +37,12 @@ describe("parseRawCommit", () => {
   });
 
   it("should handle commit with empty body parts", () => {
-    const rawCommit = "ghi789|chore: update deps|Alex Johnson|alex@example.com|1609632000||Additional info";
+    const rawCommit = "ghi789|ghi7890abcdef1234567890abcdef1234567890ab|chore: update deps|Alex Johnson|alex@example.com|1609632000||Additional info";
     const result = parseRawCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "ghi789",
+      hash: "ghi7890abcdef1234567890abcdef1234567890ab",
       message: "chore: update deps",
       author: {
         name: "Alex Johnson",
@@ -50,12 +53,13 @@ describe("parseRawCommit", () => {
     });
   });
 
-  it("should handle commit with no body", () => {
-    const rawCommit = "jkl012|docs: update readme|Sam Wilson|sam@example.com|1609718400";
+  it("should handle commit with only required fields", () => {
+    const rawCommit = "jkl012|jkl0123456789abcdef1234567890abcdef123456|docs: update readme|Sam Wilson|sam@example.com|1609718400";
     const result = parseRawCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "jkl012",
+      hash: "jkl0123456789abcdef1234567890abcdef123456",
       message: "docs: update readme",
       author: {
         name: "Sam Wilson",
@@ -69,11 +73,12 @@ describe("parseRawCommit", () => {
 
 describe("parseCommit", () => {
   it("should parse a conventional commit correctly", () => {
-    const rawCommit = parseRawCommit("abc123|feat: add new feature|John Doe|john@example.com|1609459200");
+    const rawCommit = parseRawCommit("abc123|abc1234567890abcdef1234567890abcdef1234|feat: add new feature|John Doe|john@example.com|1609459200");
     const result = parseCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "abc123",
+      hash: "abc1234567890abcdef1234567890abcdef1234",
       message: "feat: add new feature",
       authors: [{
         name: "John Doe",
@@ -91,11 +96,12 @@ describe("parseCommit", () => {
   });
 
   it("should parse a conventional commit with scope", () => {
-    const rawCommit = parseRawCommit("def456|feat(ui): add button component|Jane Smith|jane@example.com|1609545600");
+    const rawCommit = parseRawCommit("def456|def4567890abcdef1234567890abcdef12345678|feat(ui): add button component|Jane Smith|jane@example.com|1609545600");
     const result = parseCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "def456",
+      hash: "def4567890abcdef1234567890abcdef12345678",
       message: "feat(ui): add button component",
       authors: [{
         name: "Jane Smith",
@@ -112,12 +118,13 @@ describe("parseCommit", () => {
     });
   });
 
-  it("should detect breaking changes from '!' symbol", () => {
-    const rawCommit = parseRawCommit("ghi789|feat!: breaking API change|Alex Johnson|alex@example.com|1609632000");
+  it("should detect breaking changes from exclamation mark", () => {
+    const rawCommit = parseRawCommit("ghi789|ghi7890abcdef1234567890abcdef1234567890ab|feat!: breaking API change|Alex Johnson|alex@example.com|1609632000");
     const result = parseCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "ghi789",
+      hash: "ghi7890abcdef1234567890abcdef1234567890ab",
       message: "feat!: breaking API change",
       authors: [{
         name: "Alex Johnson",
@@ -135,11 +142,12 @@ describe("parseCommit", () => {
   });
 
   it("should detect breaking changes from body", () => {
-    const rawCommit = parseRawCommit("jkl012|feat: update user API|Sam Wilson|sam@example.com|1609718400|BREAKING CHANGES: User model has changed");
+    const rawCommit = parseRawCommit("jkl012|jkl0123456789abcdef1234567890abcdef123456|feat: update user API|Sam Wilson|sam@example.com|1609718400|BREAKING CHANGES: User model has changed");
     const result = parseCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "jkl012",
+      hash: "jkl0123456789abcdef1234567890abcdef123456",
       message: "feat: update user API",
       authors: [{
         name: "Sam Wilson",
@@ -156,12 +164,13 @@ describe("parseCommit", () => {
     });
   });
 
-  it("should extract PR and issue references", () => {
-    const rawCommit = parseRawCommit("mno345|fix: resolve crash, closes #123 (#456)|Dev User|dev@example.com|1609804800");
+  it("should extract references from commit message", () => {
+    const rawCommit = parseRawCommit("mno345|mno3456789abcdef1234567890abcdef1234567|fix: resolve crash, closes #123 (#456)|Dev User|dev@example.com|1609804800");
     const result = parseCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "mno345",
+      hash: "mno3456789abcdef1234567890abcdef1234567",
       message: "fix: resolve crash, closes #123 (#456)",
       authors: [{
         name: "Dev User",
@@ -181,12 +190,13 @@ describe("parseCommit", () => {
     });
   });
 
-  it("should handle co-authors in commit body", () => {
-    const rawCommit = parseRawCommit("pqr678|feat: collaborative feature|Main Author|main@example.com|1609891200|Some description\n\nCo-authored-by: Contributor One <contrib1@example.com>\nCo-authored-by: Contributor Two <contrib2@example.com>");
+  it("should extract co-authors from commit body", () => {
+    const rawCommit = parseRawCommit("pqr678|pqr67890abcdef1234567890abcdef123456789|feat: collaborative feature|Main Author|main@example.com|1609891200|Some description\n\nCo-authored-by: Contributor One <contrib1@example.com>\nCo-authored-by: Contributor Two <contrib2@example.com>");
     const result = parseCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "pqr678",
+      hash: "pqr67890abcdef1234567890abcdef123456789",
       message: "feat: collaborative feature",
       authors: [
         { name: "Main Author", email: "main@example.com" },
@@ -205,11 +215,12 @@ describe("parseCommit", () => {
   });
 
   it("should handle non-conventional commits", () => {
-    const rawCommit = parseRawCommit("stu901|Update readme with examples|Random User|random@example.com|1609977600");
+    const rawCommit = parseRawCommit("stu901|stu9012345678abcdef1234567890abcdef12345|Update readme with examples|Random User|random@example.com|1609977600");
     const result = parseCommit(rawCommit);
 
     expect(result).toEqual({
       shortHash: "stu901",
+      hash: "stu9012345678abcdef1234567890abcdef12345",
       message: "Update readme with examples",
       authors: [{
         name: "Random User",
