@@ -1,4 +1,4 @@
-import type { GitCommit } from "./types";
+import { quansync } from "quansync/macro";
 import { getRawGitCommitStrings } from "./git";
 import { parseCommit, parseRawCommit } from "./parse";
 
@@ -31,19 +31,33 @@ export interface GetCommitsOptions {
 }
 
 /**
- * Retrieves a list of parsed git commits between two points in history.
+ * Retrieves and parses git commits from a repository.
  *
  * @param {GetCommitsOptions} options - Options for fetching and parsing git commits.
+ * @returns {QuansyncFn<GitCommit[], [options: GetCommitsOptions]>} An array of structured git commits.
  *
- * @returns {GitCommit[]} An array of parsed GitCommit objects.
+ * @example
+ * ```typescript
+ * // Get all commits up to HEAD
+ * const commits = await getCommits({ to: "HEAD" });
+ *
+ * // Get commits between two references
+ * const commits = await getCommits({ from: "v1.0.0", to: "HEAD" });
+ * ```
+ *
+ * @example
+ * ```typescript
+ * // Synchronous usage
+ * const commits = getCommits.sync({ from: "v1.0.0" });
+ * ```
  */
-export function getCommits(options: GetCommitsOptions): GitCommit[] {
-  return getRawGitCommitStrings({
+export const getCommits = quansync(function* (options: GetCommitsOptions) {
+  const rawCommits = yield* getRawGitCommitStrings({
     from: options.from,
     to: options.to,
     cwd: options.cwd,
     folder: options.folder,
-  })
-    .map(parseRawCommit)
-    .map(parseCommit);
-}
+  });
+
+  return rawCommits.map(parseRawCommit).map(parseCommit);
+});

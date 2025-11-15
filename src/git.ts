@@ -1,17 +1,27 @@
-import { execSync } from "node:child_process";
+import { exec, execSync } from "node:child_process";
+import { quansync } from "quansync/macro";
 
 /** @internal */
-function execCommand(cmd: string, cwd?: string): string {
-  try {
-    return execSync(cmd, {
-      encoding: "utf8",
-      cwd,
-      stdio: ["pipe", "pipe", "pipe"],
-    }).trim();
-  } catch {
-    return "";
-  }
-}
+const execCommand = quansync({
+  sync: (cmd: string, cwd?: string) => {
+    return execSync(
+      cmd,
+      {
+        encoding: "utf8",
+        cwd,
+        stdio: "pipe",
+      },
+    ).toString();
+  },
+  async: (cmd: string, cwd?: string) => {
+    return new Promise<string>((resolve, reject) => {
+      exec(cmd, { encoding: "utf8", cwd }, (error, stdout) => {
+        if (error) reject(error);
+        else resolve(stdout);
+      });
+    });
+  },
+});
 
 /**
  * The format of git log.
@@ -51,23 +61,38 @@ export interface GetRawGitCommitStringsOptions {
 }
 
 /**
- * Retrieves raw git commits between two references.
+ * Retrieves raw git commit strings from a git repository.
  *
- * @param {GetRawGitCommitStringsOptions} options - Options for fetching raw git commits.
+ * @param {GetRawGitCommitStringsOptions} options - Configuration options for fetching git commits
+ * @returns {QuansyncFn<string[], [options: GetRawGitCommitStringsOptions]>} An array of raw git commit strings, or an empty array if no commits are found or an error occurs
  *
- * @returns {string[]} An array of raw git commit strings.
+ * @example
+ * ```typescript
+ * // Get all commits up to HEAD
+ * const commits = await getRawGitCommitStrings({ to: "HEAD" });
+ *
+ * // Get commits between two references
+ * const commits = await getRawGitCommitStrings({ from: "v1.0.0", to: "HEAD" });
+ *
+ * // Get commits from a specific folder
+ * const commits = await getRawGitCommitStrings({ to: "HEAD", folder: "src" });
+ * ```
+ *
+ * @example
+ * ```typescript
+ * // Synchronous usage
+ * const commits = getRawGitCommitStrings.sync({ from: "v1.0.0" });
+ * ```
  */
-export function getRawGitCommitStrings(options: GetRawGitCommitStringsOptions): string[] {
-  const {
-    from,
-    to = "HEAD",
-    cwd,
-    folder,
-  } = options;
-
+export const getRawGitCommitStrings = quansync(function* (options: GetRawGitCommitStringsOptions) {
+  const { from, to = "HEAD", cwd, folder } = options;
   const folderPath = folder ? ` -- ${folder}` : "";
-  const output = execCommand(`git --no-pager log "${from ? `${from}...${to}` : to}" --pretty="${GIT_LOG_FORMAT}"${folderPath}`, cwd);
-  return output
-    .split("----\n")
-    .filter(Boolean);
-}
+  const cmd = `git --no-pager log "${from ? `${from}...${to}` : to}" --pretty="${GIT_LOG_FORMAT}"${folderPath}`;
+
+  try {
+    const stdout = yield* execCommand(cmd, cwd);
+    return stdout.trim().split("----\n").filter(Boolean);
+  } catch {
+    return [];
+  }
+});
