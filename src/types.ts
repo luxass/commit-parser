@@ -7,6 +7,7 @@ export interface RawGitCommit {
   message: string;
   body: string;
   shortHash: string;
+  hash: string;
   author: GitCommitAuthor;
   data: string;
 }

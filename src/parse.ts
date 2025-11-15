@@ -16,7 +16,7 @@ const IssueRE = /(#\d+)/g;
  * @returns {RawGitCommit} A structured representation of the git commit
  */
 export function parseRawCommit(commit: string): RawGitCommit {
-  const [shortHash, message, authorName, authorEmail, data, ..._body] = commit.split("|");
+  const [shortHash, hash, message, authorName, authorEmail, data, ..._body] = commit.split("|");
   const body = _body.filter(Boolean).join("\n");
 
   return {
@@ -25,6 +25,7 @@ export function parseRawCommit(commit: string): RawGitCommit {
     data,
     message,
     shortHash,
+    hash,
   };
 }
 
@@ -82,7 +83,7 @@ function extractAuthors(body: string, primaryAuthor: GitCommitAuthor): GitCommit
  * @returns {GitCommit} A structured representation of the git commit with additional metadata
  */
 export function parseCommit(rawCommit: RawGitCommit): GitCommit {
-  const { shortHash, message, body, data } = rawCommit;
+  const { shortHash, hash, message, body, data } = rawCommit;
 
   // parse conventional commit format
   const match = message.match(ConventionalCommitRegex);
@@ -114,6 +115,7 @@ export function parseCommit(rawCommit: RawGitCommit): GitCommit {
     references,
     scope,
     shortHash,
+    hash,
     type,
   };
 }

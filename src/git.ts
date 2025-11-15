@@ -26,11 +26,11 @@ const execCommand = quansync({
 /**
  * The format of git log.
  *
- * commit_short_hash | subject | author_name | author_email | author_date | body
+ * commit_short_hash | commit_hash | subject | author_name | author_email | author_date | body
  *
  * @see {@link https://git-scm.com/docs/pretty-formats | documentation} for details.
  */
-const GIT_LOG_FORMAT = "----%n%h|%s|%an|%ae|%ad|%b";
+const GIT_LOG_FORMAT = "----%n%h|%H|%s|%an|%ae|%ad|%b";
 
 export interface GetRawGitCommitStringsOptions {
   /**
