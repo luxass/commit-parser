@@ -13,15 +13,39 @@ npm install commit-parser
 
 ## Usage
 
+> [!NOTE]
+> As of version 1.0.0, this library uses [quansync](https://github.com/quansync-dev/quansync) to provide both async and sync APIs. The default API is **async** (non-blocking), with a `.sync()` method available for synchronous usage.
+
+### Async API (Default)
+
 ```ts
-import { getCommits, parseCommit, parseRawCommit } from "commit-parser";
+import { getCommits, getRawGitCommitStrings } from "commit-parser";
 
-// get and parse all commits between two git references
-const commits = getCommits("v1.0.0", "v2.0.0");
+// get and parse all commits between two git references (async)
+const commits = await getCommits({ from: "v1.0.0", to: "v2.0.0" });
+
 // or get commits up to a specific reference
-const recentCommits = getCommits(undefined, "main");
+const recentCommits = await getCommits({ to: "main" });
 
-// parse a raw git commit string
+// get raw commit strings
+const rawCommits = await getRawGitCommitStrings({ from: "v1.0.0", to: "v2.0.0" });
+```
+
+### Sync API
+
+If you need synchronous execution (blocks the event loop), use the `.sync()` method:
+
+```ts
+import { getCommits, getRawGitCommitStrings } from "commit-parser";
+
+// synchronous version
+const commits = getCommits.sync({ from: "v1.0.0", to: "v2.0.0" });
+const rawCommits = getRawGitCommitStrings.sync({ from: "v1.0.0", to: "v2.0.0" });
+```
+
+### Parsing Commits
+
+```ts
 const rawCommit = "abc123|feat: add new feature|John Doe|john@example.com|1609459200";
 const parsedRawCommit = parseRawCommit(rawCommit);
 // {
