@@ -42,6 +42,9 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "quansync": "0.2.11"
+  },
   "devDependencies": {
     "@luxass/eslint-config": "6.0.3",
     "@types/node": "22.12.0",
