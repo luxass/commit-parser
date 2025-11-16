@@ -35,20 +35,27 @@ export function parseRawCommit(commit: string): RawGitCommit {
  * @param {string} description - The commit description to extract references from
  * @returns {object} Object containing references array and cleaned description
  */
-function extractReferences(description: string): { references: Reference[]; cleanedDescription: string } {
-  const references: Reference[] = [];
+function extractReferences(description: string, body?: string): { references: Reference[]; cleanedDescription: string } {
+  const refs = new Map<string, Reference["type"]>();
 
-  // extract pull request references
-  for (const match of description.matchAll(PullRequestRE)) {
-    references.push({ type: "pull-request", value: match[1] });
-  }
+  function append(text: string) {
+    // Add PR's first so they take precedence.
+    for (const match of text.matchAll(PullRequestRE)) {
+      const value = match[1];
+      refs.set(value, "pull-request");
+    }
 
-  // extract issue references that aren't already in pull requests
-  for (const match of description.matchAll(IssueRE)) {
-    if (!references.some((ref) => ref.value === match[1])) {
-      references.push({ type: "issue", value: match[1] });
+    // Add issues if not already present
+    for (const match of text.matchAll(IssueRE)) {
+      const value = match[1];
+      if (!refs.has(value)) refs.set(value, "issue");
     }
   }
+
+  append(description);
+  if (body) append(body);
+
+  const references: Reference[] = Array.from(refs, ([value, type]) => ({ type, value }));
 
   // cleanup description by removing pull request references
   const cleanedDescription = description.replace(PullRequestRE, "").trim();
@@ -98,8 +105,8 @@ export function parseCommit(rawCommit: RawGitCommit): GitCommit {
     || /breaking[ -]changes?:/i.test(body),
   );
 
-  // extract references and clean up description
-  const { references, cleanedDescription } = extractReferences(rawDescription);
+  // extract references from subject and body, then clean up subject description
+  const { references, cleanedDescription } = extractReferences(rawDescription, body);
 
   // extract all authors (primary + co-authors)
   const authors = extractAuthors(body, rawCommit.author);
