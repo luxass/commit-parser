@@ -75,4 +75,39 @@ describe("groupByType", () => {
     expect(result.get("feat")).toHaveLength(1);
     expect(result.has("misc")).toBe(false);
   });
+
+  it("merges specified type keys via mergeKeys", () => {
+    const commits = [
+      makeFakeCommit({ type: "feat" }),
+      makeFakeCommit({ type: "fix" }),
+      makeFakeCommit({ type: "docs" }),
+      makeFakeCommit({ type: "feat" }),
+    ];
+
+    const result = groupByType(commits, {
+      mergeKeys: { changes: ["feat", "fix"] },
+    });
+
+    expect(result.get("changes")).toHaveLength(3);
+    expect(result.has("feat")).toBe(false);
+    expect(result.has("fix")).toBe(false);
+    expect(result.get("docs")).toHaveLength(1);
+  });
+
+  it("merges type keys and nonConventionalKey via mergeKeys", () => {
+    const commits = [
+      makeFakeCommit({ type: "feat" }),
+      makeFakeCommit({ type: "fix" }),
+      makeFakeCommit({ isConventional: false, type: "" }),
+    ];
+
+    const result = groupByType(commits, {
+      mergeKeys: { other: ["fix", "misc"] },
+    });
+
+    expect(result.get("feat")).toHaveLength(1);
+    expect(result.get("other")).toHaveLength(2);
+    expect(result.has("fix")).toBe(false);
+    expect(result.has("misc")).toBe(false);
+  });
 });
