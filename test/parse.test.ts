@@ -190,6 +190,18 @@ describe("parseCommit", () => {
     });
   });
 
+  it("should extract references from commit body as well", () => {
+    const rawCommit = parseRawCommit("xyz111|xyz111234567890abcdef1234567890abcdef123|chore: update tooling|Dev User|dev@example.com|1610000000|This changes CI config. Refs #999 and closes #123 (#456)");
+    const result = parseCommit(rawCommit);
+
+    expect(result.description).toBe("update tooling");
+    expect(result.references).toEqual([
+      { type: "pull-request", value: "#456" },
+      { type: "issue", value: "#999" },
+      { type: "issue", value: "#123" },
+    ]);
+  });
+
   it("should extract co-authors from commit body", () => {
     const rawCommit = parseRawCommit("pqr678|pqr67890abcdef1234567890abcdef123456789|feat: collaborative feature|Main Author|main@example.com|1609891200|Some description\n\nCo-authored-by: Contributor One <contrib1@example.com>\nCo-authored-by: Contributor Two <contrib2@example.com>");
     const result = parseCommit(rawCommit);
