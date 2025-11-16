@@ -1,14 +1,14 @@
 export {
   getCommits,
   type GetCommitsOptions,
-} from "./commits";
+} from "#commits";
 export {
   parseCommit,
   parseRawCommit,
-} from "./parse";
+} from "#parse";
 export type {
   GitCommit,
   GitCommitAuthor,
   RawGitCommit,
   Reference,
-} from "./types";
+} from "#types";

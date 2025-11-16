@@ -22,6 +22,12 @@
     "commit-parser",
     "parser"
   ],
+  "imports": {
+    "#types": "./src/types.ts",
+    "#git": "./src/git.ts",
+    "#commits": "./src/commits.ts",
+    "#parse": "./src/parse.ts"
+  },
   "exports": {
     ".": "./dist/index.mjs",
     "./package.json": "./package.json"

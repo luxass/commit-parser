@@ -1,4 +1,4 @@
-import type { GitCommit, GitCommitAuthor, RawGitCommit, Reference } from "./types";
+import type { GitCommit, GitCommitAuthor, RawGitCommit, Reference } from "#types";
 
 // https://www.conventionalcommits.org/en/v1.0.0/
 // https://regex101.com/r/FSfNvA/1

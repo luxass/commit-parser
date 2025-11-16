@@ -1,6 +1,6 @@
+import { getRawGitCommitStrings } from "#git";
+import { parseCommit, parseRawCommit } from "#parse";
 import { quansync } from "quansync/macro";
-import { getRawGitCommitStrings } from "./git";
-import { parseCommit, parseRawCommit } from "./parse";
 
 export interface GetCommitsOptions {
   /**
