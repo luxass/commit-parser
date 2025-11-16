@@ -77,7 +77,9 @@ export interface GitCommit extends Omit<RawGitCommit, "author"> {
   scope: string | undefined;
 
   /**
-   * The description of the commit.
+   * Cleaned subject:
+   * - For conventional commits: subject without type/scope/! and without PR refs.
+   * - For non-conventional commits: original subject without PR refs.
    */
   description: string;
 
