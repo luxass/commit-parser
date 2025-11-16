@@ -18,6 +18,11 @@ export interface GroupByTypeOptions {
    * List of commit types to exclude from grouping
    */
   excludeKeys?: string[];
+
+  /**
+   * Combine multiple keys into one group
+   */
+  mergeKeys?: Record<string, string[]>;
 }
 
 /**
@@ -49,6 +54,7 @@ export function groupByType(
     includeNonConventional = true,
     nonConventionalKey = "misc",
     excludeKeys = [],
+    mergeKeys,
   } = opts;
 
   const groupedCommits = new Map<string, GitCommit[]>();
@@ -71,6 +77,16 @@ export function groupByType(
     // If the key is in the exclude list, skip this commit
     if (excludeKeys.includes(key)) {
       continue;
+    }
+
+    // If mergeKeys is provided, we wanna see if this key should be merged into another
+    if (mergeKeys) {
+      for (const [targetKey, keysToMerge] of Object.entries(mergeKeys)) {
+        if (keysToMerge.includes(key)) {
+          key = targetKey;
+          break;
+        }
+      }
     }
 
     const group = groupedCommits.get(key) ?? [];
