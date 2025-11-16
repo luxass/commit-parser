@@ -4,12 +4,35 @@ export interface GitCommitAuthor {
 }
 
 export interface RawGitCommit {
+  /**
+   * The commit message.
+   */
   message: string;
+
+  /**
+   * The commit body.
+   */
   body: string;
+
+  /**
+   * The short hash of the commit.
+   */
   shortHash: string;
+
+  /**
+   * The full hash of the commit.
+   */
   hash: string;
+
+  /**
+   * The author of the commit.
+   */
   author: GitCommitAuthor;
-  data: string;
+
+  /**
+   * The commit date as a string.
+   */
+  date: string;
 }
 
 export interface Reference {
@@ -18,11 +41,39 @@ export interface Reference {
 }
 
 export interface GitCommit extends Omit<RawGitCommit, "author"> {
+  /**
+   * Whether the commit follows conventional commit guidelines.
+   */
   isConventional: boolean;
-  description: string;
-  type: string;
-  scope: string;
-  references: Reference[];
-  authors: GitCommitAuthor[];
+
+  /**
+   * Whether the commit introduces a breaking change.
+   */
   isBreaking: boolean;
+
+  /**
+   * The type of the commit (e.g., feat, fix, chore).
+   * If this is a non-conventional commit, this will be an empty string.
+   */
+  type: string;
+
+  /**
+   * The scope of the commit (e.g., core, ui).
+   */
+  scope: string;
+
+  /**
+   * The description of the commit.
+   */
+  description: string;
+
+  /**
+   * List of references (issues, pull requests) mentioned in the commit message.
+   */
+  references: Reference[];
+
+  /**
+   * List of all authors (primary + co-authors)
+   */
+  authors: GitCommitAuthor[];
 }

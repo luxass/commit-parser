@@ -6,7 +6,7 @@ export function makeFakeCommit(overrides: Partial<GitCommit> = {}): GitCommit {
     hash: "abc1234567890abcdef1234567890abcdef1234",
     message: "feat: add new feature",
     authors: [{ name: "John Doe", email: "john@example.com" }],
-    data: "1609459200",
+    date: "1609459200",
     body: "",
     type: "feat",
     scope: "core",
