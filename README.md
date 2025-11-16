@@ -55,7 +55,7 @@ const parsedRawCommit = parseRawCommit(rawCommit);
 //     name: "John Doe",
 //     email: "john@example.com"
 //   },
-//   data: "1609459200",
+//   date: "1609459200",
 //   body: ""
 // }
 
@@ -68,7 +68,7 @@ const parsedCommit = parseCommit(parsedRawCommit);
 //     name: "John Doe",
 //     email: "john@example.com"
 //   }],
-//   data: "1609459200",
+//   date: "1609459200",
 //   body: "",
 //   type: "feat",
 //   scope: "",

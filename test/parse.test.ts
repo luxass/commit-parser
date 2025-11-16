@@ -14,7 +14,7 @@ describe("parseRawCommit", () => {
         name: "John Doe",
         email: "john@example.com",
       },
-      data: "1609459200",
+      date: "1609459200",
       body: "",
     });
   });
@@ -31,7 +31,7 @@ describe("parseRawCommit", () => {
         name: "Jane Smith",
         email: "jane@example.com",
       },
-      data: "1609545600",
+      date: "1609545600",
       body: "This is the first line\nThis is the second line",
     });
   });
@@ -48,7 +48,7 @@ describe("parseRawCommit", () => {
         name: "Alex Johnson",
         email: "alex@example.com",
       },
-      data: "1609632000",
+      date: "1609632000",
       body: "Additional info",
     });
   });
@@ -65,7 +65,7 @@ describe("parseRawCommit", () => {
         name: "Sam Wilson",
         email: "sam@example.com",
       },
-      data: "1609718400",
+      date: "1609718400",
       body: "",
     });
   });
@@ -84,7 +84,7 @@ describe("parseCommit", () => {
         name: "John Doe",
         email: "john@example.com",
       }],
-      data: "1609459200",
+      date: "1609459200",
       body: "",
       type: "feat",
       scope: "",
@@ -107,7 +107,7 @@ describe("parseCommit", () => {
         name: "Jane Smith",
         email: "jane@example.com",
       }],
-      data: "1609545600",
+      date: "1609545600",
       body: "",
       type: "feat",
       scope: "ui",
@@ -130,7 +130,7 @@ describe("parseCommit", () => {
         name: "Alex Johnson",
         email: "alex@example.com",
       }],
-      data: "1609632000",
+      date: "1609632000",
       body: "",
       type: "feat",
       scope: "",
@@ -153,7 +153,7 @@ describe("parseCommit", () => {
         name: "Sam Wilson",
         email: "sam@example.com",
       }],
-      data: "1609718400",
+      date: "1609718400",
       body: "BREAKING CHANGES: User model has changed",
       type: "feat",
       scope: "",
@@ -176,7 +176,7 @@ describe("parseCommit", () => {
         name: "Dev User",
         email: "dev@example.com",
       }],
-      data: "1609804800",
+      date: "1609804800",
       body: "",
       type: "fix",
       scope: "",
@@ -203,7 +203,7 @@ describe("parseCommit", () => {
         { name: "Contributor One", email: "contrib1@example.com" },
         { name: "Contributor Two", email: "contrib2@example.com" },
       ],
-      data: "1609891200",
+      date: "1609891200",
       body: "Some description\n\nCo-authored-by: Contributor One <contrib1@example.com>\nCo-authored-by: Contributor Two <contrib2@example.com>",
       type: "feat",
       scope: "",
@@ -226,7 +226,7 @@ describe("parseCommit", () => {
         name: "Random User",
         email: "random@example.com",
       }],
-      data: "1609977600",
+      date: "1609977600",
       body: "",
       type: "",
       scope: "",
