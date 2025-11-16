@@ -13,6 +13,11 @@ export interface GroupByTypeOptions {
    * @default "misc"
    */
   nonConventionalKey?: string;
+
+  /**
+   * List of commit types to exclude from grouping
+   */
+  excludeKeys?: string[];
 }
 
 /**
@@ -43,7 +48,9 @@ export function groupByType(
   const {
     includeNonConventional = true,
     nonConventionalKey = "misc",
+    excludeKeys = [],
   } = opts;
+
   const groupedCommits = new Map<string, GitCommit[]>();
 
   for (const commit of commits) {
@@ -59,6 +66,11 @@ export function groupByType(
       const commitType = (commit.type || "").toLowerCase();
       if (!commitType) continue;
       key = commitType;
+    }
+
+    // If the key is in the exclude list, skip this commit
+    if (excludeKeys.includes(key)) {
+      continue;
     }
 
     const group = groupedCommits.get(key) ?? [];
