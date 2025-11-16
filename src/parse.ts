@@ -89,7 +89,7 @@ export function parseCommit(rawCommit: RawGitCommit): GitCommit {
   const match = message.match(ConventionalCommitRegex);
   const isConventional = match !== null;
   const type = match?.groups?.type || "";
-  const scope = match?.groups?.scope || "";
+  const scope = match?.groups?.scope;
   const rawDescription = match?.groups?.description || message;
 
   // check for breaking changes

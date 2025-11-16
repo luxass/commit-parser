@@ -74,7 +74,7 @@ export interface GitCommit extends Omit<RawGitCommit, "author"> {
   /**
    * The scope of the commit (e.g., core, ui).
    */
-  scope: string;
+  scope: string | undefined;
 
   /**
    * The description of the commit.
