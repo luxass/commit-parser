@@ -1,5 +1,12 @@
 export interface GitCommitAuthor {
+  /**
+   * The author's name.
+   */
   name: string;
+
+  /**
+   * The author's email.
+   */
   email: string;
 }
 
@@ -36,7 +43,14 @@ export interface RawGitCommit {
 }
 
 export interface Reference {
+  /**
+   * The type of the reference (issue or pull request).
+   */
   type: "issue" | "pull-request";
+
+  /**
+   * The value of the reference (e.g., the issue or pull request number).
+   */
   value: string;
 }
 
