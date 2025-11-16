@@ -26,7 +26,8 @@
     "#types": "./src/types.ts",
     "#git": "./src/git.ts",
     "#commits": "./src/commits.ts",
-    "#parse": "./src/parse.ts"
+    "#parse": "./src/parse.ts",
+    "#grouping": "./src/grouping.ts"
   },
   "exports": {
     ".": "./dist/index.mjs",

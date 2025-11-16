@@ -1,5 +1,5 @@
+import { parseCommit, parseRawCommit } from "#parse";
 import { describe, expect, it } from "vitest";
-import { parseCommit, parseRawCommit } from "../src/parse";
 
 describe("parseRawCommit", () => {
   it("should parse a basic commit correctly", () => {

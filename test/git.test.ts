@@ -1,7 +1,7 @@
 import type { Mock } from "vitest";
 import { exec, execSync } from "node:child_process";
+import { getRawGitCommitStrings } from "#git";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getRawGitCommitStrings } from "../src/git";
 
 vi.mock("node:child_process", () => ({
   execSync: vi.fn(),
