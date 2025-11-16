@@ -45,4 +45,34 @@ describe("groupByType", () => {
     expect(result.get("feat")).toHaveLength(1);
     expect(result.has("")).toBe(false);
   });
+
+  it("excludes specified type keys via excludeKeys", () => {
+    const commits = [
+      makeFakeCommit({ type: "feat" }),
+      makeFakeCommit({ type: "fix" }),
+      makeFakeCommit({ type: "docs" }),
+      makeFakeCommit({ isConventional: false, type: "" }),
+    ];
+
+    const result = groupByType(commits, {
+      excludeKeys: ["fix", "docs"],
+    });
+
+    expect(result.get("feat")).toHaveLength(1);
+    expect(result.has("fix")).toBe(false);
+    expect(result.has("docs")).toBe(false);
+  });
+
+  it("excludes nonConventionalKey via excludeKeys", () => {
+    const commits = [
+      makeFakeCommit({ type: "feat" }),
+      makeFakeCommit({ isConventional: false, type: "" }),
+    ];
+
+    const result = groupByType(commits, {
+      excludeKeys: ["misc"],
+    });
+    expect(result.get("feat")).toHaveLength(1);
+    expect(result.has("misc")).toBe(false);
+  });
 });
