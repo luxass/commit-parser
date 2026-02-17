@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@luxass/eslint-config": "7.2.0",
-    "@types/node": "22.12.0",
+    "@types/node": "24.10.13",
     "eslint": "10.0.0",
     "publint": "0.3.17",
     "tsdown": "0.20.3",
