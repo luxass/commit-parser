@@ -8,7 +8,7 @@
     "email": "lucasnrgaard@gmail.com",
     "url": "https://luxass.dev"
   },
-  "packageManager": "pnpm@10.29.3",
+  "packageManager": "pnpm@10.32.1",
   "license": "MIT",
   "homepage": "https://github.com/luxass/commit-parser",
   "repository": {
@@ -53,17 +53,17 @@
     "quansync": "1.0.0"
   },
   "devDependencies": {
-    "@luxass/eslint-config": "7.2.0",
-    "@types/node": "22.12.0",
+    "@luxass/eslint-config": "7.3.0",
+    "@types/node": "22.19.15",
     "eslint": "10.0.0",
-    "publint": "0.3.17",
-    "tsdown": "0.20.3",
+    "publint": "0.3.18",
+    "tsdown": "0.21.4",
     "typescript": "5.9.3",
     "vitest": "4.0.18"
   },
   "pnpm": {
     "overrides": {
-      "rolldown": "1.0.0-rc.4"
+      "rolldown": "1.0.0-rc.10"
     }
   }
 }
