@@ -53,17 +53,17 @@
     "quansync": "1.0.0"
   },
   "devDependencies": {
-    "@luxass/eslint-config": "7.2.0",
-    "@types/node": "22.12.0",
+    "@luxass/eslint-config": "7.4.2",
+    "@types/node": "22.20.0",
     "eslint": "10.0.0",
-    "publint": "0.3.17",
-    "tsdown": "0.20.3",
+    "publint": "0.3.21",
+    "tsdown": "0.22.3",
     "typescript": "5.9.3",
     "vitest": "4.0.18"
   },
   "pnpm": {
     "overrides": {
-      "rolldown": "1.0.0-rc.4"
+      "rolldown": "1.1.4"
     }
   }
 }
