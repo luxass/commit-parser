@@ -66,12 +66,12 @@ export function groupByType(
     }
 
     let key: string | undefined;
-    if (!commit.isConventional) {
-      key = nonConventionalKey;
-    } else {
+    if (commit.isConventional) {
       const commitType = (commit.type || "").toLowerCase();
       if (!commitType) continue;
       key = commitType;
+    } else {
+      key = nonConventionalKey;
     }
 
     // If the key is in the exclude list, skip this commit

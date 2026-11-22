@@ -7,6 +7,6 @@ export default defineConfig({
   outDir: "./dist",
   format: "esm",
   clean: true,
-  exports: true,
+  exports: false,
   publint: true,
 });

@@ -59,5 +59,5 @@ export const getCommits = quansync(function* (options: GetCommitsOptions) {
     folder: options.folder,
   });
 
-  return rawCommits.map(parseRawCommit).map(parseCommit);
+  return rawCommits.map((rawCommit) => parseCommit(parseRawCommit(rawCommit)));
 });

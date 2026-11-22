@@ -1,17 +1,15 @@
 import { exec, execSync } from "node:child_process";
+
 import { quansync } from "quansync/macro";
 
 /** @internal */
 const execCommand = quansync({
   sync: (cmd: string, cwd?: string) => {
-    return execSync(
-      cmd,
-      {
-        encoding: "utf8",
-        cwd,
-        stdio: "pipe",
-      },
-    ).toString();
+    return execSync(cmd, {
+      encoding: "utf8",
+      cwd,
+      stdio: "pipe",
+    }).toString();
   },
   async: (cmd: string, cwd?: string) => {
     return new Promise<string>((resolve, reject) => {
