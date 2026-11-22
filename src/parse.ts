@@ -2,12 +2,12 @@ import type { GitCommit, GitCommitAuthor, RawGitCommit, Reference } from "#types
 
 // https://www.conventionalcommits.org/en/v1.0.0/
 // https://regex101.com/r/FSfNvA/1
-const ConventionalCommitRegex
-  = /(?<emoji>:.+:|(\uD83C[\uDF00-\uDFFF])|(\uD83D[\uDC00-\uDE4F\uDE80-\uDEFF])|[\u2600-\u2B55])?( *)(?<type>[a-z]+)(\((?<scope>.+)\))?(?<breaking>!)?: (?<description>.+)/i;
-// eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/no-misleading-capturing-group
-const CoAuthoredByRegex = /co-authored-by:\s*(?<name>.+)(<(?<email>.+)>)/gi;
-const PullRequestRE = /\([ a-z]*(#\d+)\s*\)/g;
-const IssueRE = /(#\d+)/g;
+const ConventionalCommitRegex =
+  // oxlint-disable-next-line eslint/require-unicode-regexp -- The emoji alternatives match UTF-16 surrogate pairs.
+  /(?<emoji>:.+:|(\uD83C[\uDF00-\uDFFF])|(\uD83D[\uDC00-\uDE4F\uDE80-\uDEFF])|[\u2600-\u2B55])?( *)(?<type>[a-z]+)(\((?<scope>.+)\))?(?<breaking>!)?: (?<description>.+)/i;
+const CoAuthoredByRegex = /co-authored-by:\s*(?<name>.+)(<(?<email>.+)>)/giu;
+const PullRequestRE = /\([ a-z]*(#\d+)\s*\)/gu;
+const IssueRE = /(#\d+)/gu;
 
 /**
  * Parses a raw git commit string into a structured format.
@@ -35,7 +35,10 @@ export function parseRawCommit(commit: string): RawGitCommit {
  * @param {string} description - The commit description to extract references from
  * @returns {object} Object containing references array and cleaned description
  */
-function extractReferences(description: string, body?: string): { references: Reference[]; cleanedDescription: string } {
+function extractReferences(
+  description: string,
+  body?: string,
+): { references: Reference[]; cleanedDescription: string } {
   const refs = new Map<string, Reference["type"]>();
 
   function append(text: string) {
@@ -58,7 +61,7 @@ function extractReferences(description: string, body?: string): { references: Re
   const references: Reference[] = Array.from(refs, ([value, type]) => ({ type, value }));
 
   // cleanup description by removing pull request references
-  const cleanedDescription = description.replace(PullRequestRE, "").trim();
+  const cleanedDescription = description.replaceAll(PullRequestRE, "").trim();
 
   return { references, cleanedDescription };
 }
@@ -100,10 +103,8 @@ export function parseCommit(rawCommit: RawGitCommit): GitCommit {
   const rawDescription = match?.groups?.description || message;
 
   // check for breaking changes
-  const isBreaking = Boolean(
-    match?.groups?.breaking
-    || /breaking[ -]changes?:/i.test(body),
-  );
+  // oxlint-disable-next-line eslint/require-unicode-regexp -- Keep case folding limited to the existing ASCII marker.
+  const isBreaking = Boolean(match?.groups?.breaking || /breaking[ -]changes?:/i.test(body));
 
   // extract references from subject and body, then clean up subject description
   const { references, cleanedDescription } = extractReferences(rawDescription, body);

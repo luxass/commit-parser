@@ -79,17 +79,23 @@ const parsedCommit = parseCommit(parsedRawCommit);
 // }
 
 // handles breaking changes
-const breakingCommit = parseRawCommit("def456|feat!: breaking change|Jane Doe|jane@example.com|1609459200");
+const breakingCommit = parseRawCommit(
+  "def456|feat!: breaking change|Jane Doe|jane@example.com|1609459200",
+);
 const parsedBreaking = parseCommit(breakingCommit);
 // isBreaking will be true
 
 // extracts PR and issue references
-const commitWithRefs = parseRawCommit("ghi789|fix: resolve crash, closes #123 (#456)|Dev User|dev@example.com|1609459200");
+const commitWithRefs = parseRawCommit(
+  "ghi789|fix: resolve crash, closes #123 (#456)|Dev User|dev@example.com|1609459200",
+);
 const parsedRefs = parseCommit(commitWithRefs);
 // references will contain [{ type: "pull-request", value: "#456" }, { type: "issue", value: "#123" }]
 
 // handles co-authors
-const coAuthoredCommit = parseRawCommit("jkl012|feat: collaborative feature|Main Author|main@example.com|1609459200|Some description\n\nCo-authored-by: Contributor One <contrib1@example.com>");
+const coAuthoredCommit = parseRawCommit(
+  "jkl012|feat: collaborative feature|Main Author|main@example.com|1609459200|Some description\n\nCo-authored-by: Contributor One <contrib1@example.com>",
+);
 const parsedCoAuthored = parseCommit(coAuthoredCommit);
 // authors will contain both the main author and co-author
 ```

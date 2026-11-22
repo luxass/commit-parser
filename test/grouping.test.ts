@@ -1,5 +1,6 @@
 import { groupByType } from "#grouping";
 import { describe, expect, it } from "vitest";
+
 import { makeFakeCommit } from "./_shared";
 
 describe("groupByType", () => {
@@ -37,10 +38,7 @@ describe("groupByType", () => {
   });
 
   it("skips commits with missing type", () => {
-    const commits = [
-      makeFakeCommit({ type: "feat" }),
-      makeFakeCommit({ type: "" }),
-    ];
+    const commits = [makeFakeCommit({ type: "feat" }), makeFakeCommit({ type: "" })];
     const result = groupByType(commits);
     expect(result.get("feat")).toHaveLength(1);
     expect(result.has("")).toBe(false);
